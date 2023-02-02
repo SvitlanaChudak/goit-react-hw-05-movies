@@ -1,17 +1,23 @@
 import { getTrending } from "services/api"
 import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
+import { Loader } from "components/Loader/Loader";
 
 export const Home = () => {
     const [movies, setMovies] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const results = await getTrending();
-                setMovies(prevMovies => [...prevMovies, ...results]);
+                setIsLoading(true);
+                const response= await getTrending();
+                setMovies(response.results);
             } catch (error) {
-                console.log('Error')
-            };
+                console.log('Error');
+            } finally {
+                setIsLoading(false);
+            }
             };
             fetchMovies();
     }, []);
@@ -20,8 +26,11 @@ export const Home = () => {
     
     return (
         <>
+
             <h1>Trending today</h1>
-            {movies.length > 0 && (
+
+            {isLoading && <Loader />}
+
             <ul>
             {movies.map(({ id, poster_path, title, name }) => (
                     <li key={id}>
@@ -32,7 +41,7 @@ export const Home = () => {
                 </li>
             ))}
                 </ul>
-                )}
+
             </>
     )
 }
