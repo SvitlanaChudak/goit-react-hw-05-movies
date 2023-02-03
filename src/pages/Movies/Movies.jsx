@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { searchMovies } from "services/api";
 import { Link, useSearchParams, useLocation } from "react-router-dom";
 import { Loader } from "components/Loader/Loader";
+import { toast, Toaster } from 'react-hot-toast';
 
 export const Movies = () => {
     const [query, setQuery] = useState('');
@@ -20,7 +21,13 @@ export const Movies = () => {
             try {
                 setIsLoading(true);
                 const response = await searchMovies(searchQuery);
-                setMovies(response);
+                if (response.length !== 0) {
+                    setMovies(response);
+                    toast.success('Movie found');
+        }
+        else {
+        toast.error('Movie not found');
+      }
             } catch (error) {
                 console.log('Error')
             } finally {
@@ -35,7 +42,10 @@ export const Movies = () => {
   };
 
   const handleSubmit = event => {
-    event.preventDefault();
+      event.preventDefault();
+      if (query.trim() === '') {
+      return toast.error('Please enter something');
+    }
     setSearchParams({ query });
     setQuery('');
     };
@@ -44,6 +54,7 @@ export const Movies = () => {
 
     return (
         <>
+            <Toaster />
         <form onSubmit={handleSubmit}>
             <input type="text" value={query} onChange={handleChange}/>
             <button type="submit">Search</button>
