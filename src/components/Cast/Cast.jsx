@@ -4,13 +4,13 @@ import { useParams } from 'react-router-dom';
 
 export const Cast = () => {
     const { movieId } = useParams('movieId');
-    const [credits, setCredits] = useState([]);
+    const [cast, setCast] = useState([]);
     
         useEffect(() => {
-        const getCast = async (movieId) => {
+        const getCast = async () => {
             try {
                 const response = await getMovieCredits(movieId);
-                setCredits(response);
+                setCast(response);
             } catch (error) {
                 console.log('Error')
             };
@@ -22,17 +22,15 @@ export const Cast = () => {
 
     return (
         <>
-            {credits.length > 0 && (
-                        <ul>
-            {credits.map(({cast_id, profile_path, name, character}) => (
-                    <li key={cast_id}>
-                    <img src={IMG_URL + profile_path} alt="" />
-                    <p>{name}</p>
-                    <p>{character}</p>
-                </li>
-            ))}
+            <ul>       
+                {cast.map(({ id, profile_path, name, character }) => (
+                    <li key={id}>
+                        <img src={IMG_URL + profile_path} alt="" />
+                        <h3>{name}</h3>
+                        <p>Character: {character}</p>
+                    </li>
+                ))}
                 </ul>
-                )}
         </>
     )
 }
