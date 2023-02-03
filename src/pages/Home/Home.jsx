@@ -31,7 +31,7 @@ export const Home = () => {
             <h1>Trending today</h1>
 
             {isLoading && <Loader />}
-{movies.length > 0 && (
+            
             <ul>
             {movies.map(({ id, poster_path, title, name }) => (
                     <li key={id}>
@@ -42,7 +42,6 @@ export const Home = () => {
                 </li>
             ))}
                 </ul>
- )}
             </>
     )
 }

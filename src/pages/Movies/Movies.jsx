@@ -1,40 +1,42 @@
 import { useState, useEffect } from "react";
 import { searchMovies } from "services/api";
 import { Link, useSearchParams, useLocation } from "react-router-dom";
+import { Loader } from "components/Loader/Loader";
 
 export const Movies = () => {
     const [query, setQuery] = useState('');
     const [movies, setMovies] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
     const location = useLocation();
 
     const searchQuery = searchParams.get('query');
 
-    // useEffect(() => {
-    //     const searchMovie = async () => {
-    //         try {
-    //             const response = await searchMovies(searchQuery);
-    //             setMovies(response);
-    //         } catch (error) {
-    //             console.log('Error')
-    //         };
-    //         };
-    //         searchMovie();
-    //     }, [searchQuery]);
-
-      useEffect(() => {
-    searchQuery && searchMovies(searchQuery).then(setMovies);
-  }, [searchQuery]);
+    useEffect(() => {
+        const searchMovie = async () => {
+                  if (!searchQuery) {
+        return;
+      }
+            try {
+                setIsLoading(true);
+                const response = await searchMovies(searchQuery);
+                setMovies(response);
+            } catch (error) {
+                console.log('Error')
+            } finally {
+                setIsLoading(false);
+            }
+            };
+            searchMovie();
+        }, [searchQuery]);
 
   const handleChange = event => {
     setQuery(event.currentTarget.value);
   };
 
-  const handleSubmit = async event => {
+  const handleSubmit = event => {
     event.preventDefault();
-    const response = await searchMovies(query);
-      setMovies(response);
-      setSearchParams({ query });
+    setSearchParams({ query });
     setQuery('');
     };
     
@@ -47,7 +49,8 @@ export const Movies = () => {
             <button type="submit">Search</button>
         </form>
 
-             {movies.length > 0 && (
+            {isLoading && <Loader />}
+
          <ul>
             {movies.map(({ id, poster_path, title, name }) => (
                     <li key={id}>
@@ -58,7 +61,6 @@ export const Movies = () => {
                 </li>
             ))}
                 </ul>
-                )}
             </>
     )
 }
