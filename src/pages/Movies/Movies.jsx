@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { searchMovies } from "services/api";
-import { Link, useSearchParams, useLocation } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 import { Loader } from "components/Loader/Loader";
 import { toast, Toaster } from 'react-hot-toast';
+import { List, Image, Container, Item, Title, Form, SearchInput, SearchButton, MovieLink } from "./Movies.styled";
 
 export const Movies = () => {
     const [query, setQuery] = useState('');
@@ -49,29 +50,29 @@ export const Movies = () => {
     setSearchParams({ query });
     setQuery('');
     };
-    
-    const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 
     return (
-        <>
+        <Container>
             <Toaster />
-        <form onSubmit={handleSubmit}>
-            <input type="text" value={query} onChange={handleChange}/>
-            <button type="submit">Search</button>
-        </form>
+        <Form onSubmit={handleSubmit}>
+            <SearchInput type="text" value={query} onChange={handleChange}/>
+            <SearchButton type="submit">Search</SearchButton>
+        </Form>
 
             {isLoading && <Loader />}
 
-         <ul>
+         <List>
             {movies.map(({ id, poster_path, title, name }) => (
-                    <li key={id}>
-                    <Link to={`/movies/${id}`} state={{ from: location }}>
-                            <img src={IMG_URL + poster_path} alt="" />
-                            <h2>{title || name}</h2>
-                    </Link>
-                </li>
+                    <Item key={id}>
+                    <MovieLink to={`/movies/${id}`} state={{ from: location }}>
+                            <Image src={poster_path && poster_path  !== null
+    ? `https://image.tmdb.org/t/p/w500${poster_path}`
+    : `https://i.ibb.co/Mg2D0bG/no-image-available.webp`} alt="" width='300'/>
+                            <Title>{title || name}</Title>
+                    </MovieLink>
+                </Item>
             ))}
-                </ul>
-            </>
+                </List>
+            </Container>
     )
 }

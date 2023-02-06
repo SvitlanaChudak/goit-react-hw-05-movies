@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getMovieCredits } from "services/api";
 import { useParams } from 'react-router-dom';
+import { Container, List, Item, Image } from "./Cast.styled";
 
 export const Cast = () => {
     const { movieId } = useParams('movieId');
@@ -17,20 +18,24 @@ export const Cast = () => {
             };
             getCast();
         }, [movieId]);
-    
-    const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 
     return (
-        <>
-            <ul>       
+        <Container>
+            {cast.length !== 0 ? (
+            <List>       
                 {cast.map(({ id, profile_path, name, character }) => (
-                    <li key={id}>
-                        <img src={IMG_URL + profile_path} alt="" />
+                    <Item key={id}>
+                        <Image src={profile_path && profile_path  !== null
+    ? `https://image.tmdb.org/t/p/w500${profile_path}`
+    : `https://i.ibb.co/Mg2D0bG/no-image-available.webp`} alt="" width='150'/>
                         <h3>{name}</h3>
                         <p>Character: {character}</p>
-                    </li>
+                    </Item>
                 ))}
-                </ul>
-        </>
+                </List>
+                 ) : (
+            <p>We don`t have any cast information for this movie.</p>
+          )}
+        </Container>
     )
 }

@@ -1,27 +1,23 @@
-import { Link, Outlet, useParams, useNavigate, useLocation, } from "react-router-dom";
+import { Outlet, useParams, useNavigate, useLocation, } from "react-router-dom";
 import { getMovieDetails } from "services/api";
 import { useState, useEffect } from "react";
-import { Loader } from "components/Loader/Loader";
+import { Button, Container, Image, Info, Title, InfoList, InfoLink } from "./MovieDetails.styled";
 
 export const MovieDetails = () => {
     const [movie, setMovie] = useState({});
-    const [isLoading, setIsLoading] = useState(false);
     const { movieId } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
     const backLinkHref = location.state?.from ?? '/movies';
     
         useEffect(() => {
-        const getDetails = async () => {
-            try {
-                                setIsLoading(true);
-                const response = await getMovieDetails(movieId);
-                setMovie(response);
-            } catch (error) {
-                console.log('Error')
-            } finally {
-                setIsLoading(false);
-            }
+            const getDetails = async () => {
+                try {
+                    const response = await getMovieDetails(movieId);
+                    setMovie(response);
+                } catch (error) {
+                    console.log('Error')
+                };
             };
             getDetails();
         }, [movieId]);
@@ -29,18 +25,20 @@ export const MovieDetails = () => {
       const backToMovies = () => {
     navigate(backLinkHref);
   };
-    
-    const IMG_URL = 'https://image.tmdb.org/t/p/w500';
+        
     const { poster_path, title, name, overview, genres } = movie;
+        const poster = poster_path && poster_path  !== null
+            ? `https://image.tmdb.org/t/p/w500${poster_path}`
+            : `https://i.ibb.co/Mg2D0bG/no-image-available.webp`;
     
     return (
+        
         <>
-            <button type="button" onClick={backToMovies}>Back to movies</button>
+            <Button type="button" onClick={backToMovies}>Back to movies</Button>
 
-                {isLoading && <Loader />}
-
-                <div>
-                    <img src={IMG_URL + poster_path} alt="" />
+                <Container>
+                <Image src={poster} alt="" width='300' />
+                <Info>
                 <h2>Title</h2>
                 <p>{title || name}</p>
                 <h2>Overview</h2>
@@ -48,18 +46,20 @@ export const MovieDetails = () => {
                 <h2>Genres</h2>
                 <p>{genres?.length > 0
                   ? genres.map(genre => genre.name).join(', ')
-                  : '-'}</p>
-                    <h2>Additional information</h2>
-                    <ul>
+                        : '-'}</p>
+                </Info>
+                </Container>
+                    <Title>Additional information</Title>
+                    <InfoList>
                         <li>
-                            <Link to={'cast'} state={{ from: location?.state?.from }}>Cast</Link>
+                            <InfoLink to={'cast'} state={{ from: location?.state?.from }}>Cast</InfoLink>
                         </li>
                         <li>
-                            <Link to={'reviews'} state={{ from: location?.state?.from }}>Reviews</Link>
+                            <InfoLink to={'reviews'} state={{ from: location?.state?.from }}>Reviews</InfoLink>
                         </li>
-                    </ul>
+                    </InfoList>
                     <Outlet />
-                </div>
+                
 
 </>
     )
