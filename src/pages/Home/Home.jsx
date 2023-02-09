@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { Loader } from "components/Loader/Loader";
 import { List, Image, Container, Item, Title, MovieLink } from "./Home.styled";
 
-export const Home = () => {
+const Home = () => {
     const [movies, setMovies] = useState([]);
     const location = useLocation();
     const [isLoading, setIsLoading] = useState(false);
@@ -46,3 +46,5 @@ export const Home = () => {
             </Container>
     )
 }
+
+export default Home;

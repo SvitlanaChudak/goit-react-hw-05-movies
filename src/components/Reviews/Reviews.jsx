@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Container, List } from "./Reviews.styled";
 
 
-export const Reviews = () => {
+const Reviews = () => {
   const { movieId } = useParams('movieId');
     const [reviews, setReviews] = useState([]);
     
@@ -38,3 +38,5 @@ export const Reviews = () => {
     )
     
 }
+
+export default Reviews;

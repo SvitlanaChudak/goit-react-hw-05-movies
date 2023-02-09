@@ -3,7 +3,7 @@ import { getMovieDetails } from "services/api";
 import { useState, useEffect } from "react";
 import { Button, Container, Image, Info, Title, InfoList, InfoLink } from "./MovieDetails.styled";
 
-export const MovieDetails = () => {
+const MovieDetails = () => {
     const [movie, setMovie] = useState({});
     const { movieId } = useParams();
     const navigate = useNavigate();
@@ -64,3 +64,5 @@ export const MovieDetails = () => {
 </>
     )
 }
+
+export default MovieDetails;

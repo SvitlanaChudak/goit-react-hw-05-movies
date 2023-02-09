@@ -5,7 +5,7 @@ import { Loader } from "components/Loader/Loader";
 import { toast, Toaster } from 'react-hot-toast';
 import { List, Image, Container, Item, Title, Form, SearchInput, SearchButton, MovieLink } from "./Movies.styled";
 
-export const Movies = () => {
+const Movies = () => {
     const [query, setQuery] = useState('');
     const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -76,3 +76,5 @@ export const Movies = () => {
             </Container>
     )
 }
+
+export default Movies;
